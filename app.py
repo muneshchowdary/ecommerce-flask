@@ -45,20 +45,20 @@ def add_product():
         if 'image' in request.files and request.files['image'].filename:
             image = request.files['image']
             filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image.save(os.path.join(gunicorn app:app.config['UPLOAD_FOLDER'], filename))
             prod["image"] = filename
         products.insert_one(prod)
         return redirect(url_for('index'))
     return render_template('edit_product.html', product=None)
 
-@app.route('/delete/<id>')
+@gunicorn app:app.route('/delete/<id>')
 def delete_product(id):
     products.delete_one({"_id": ObjectId(id)})
     return redirect(url_for('index'))
 
-@app.route('/static/uploads/<filename>')
+@gunicorn app:app.route('/static/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(gunicorn app:app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    gunicorn app:app.run(debug=True)

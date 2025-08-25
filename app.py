@@ -4,6 +4,10 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
+import urllib.parse
+
+username = urllib.parse.quote_plus("sireesha")        # becomes 'my+user'
+password = urllib.parse.quote_plus("@Kudnana143")   # becomes 'pa%24%24word%40123'
 
 # Option A: Hardcode the connection string (not recommended for production)
 #client = MongoClient("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority")

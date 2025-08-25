@@ -1,27 +1,22 @@
 import os
+import urllib.parse
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
-from pymongo import MongoClient
-import urllib.parse
 
-username = urllib.parse.quote_plus("sireesha")        # becomes 'my+user'
-password = urllib.parse.quote_plus("@Kudnana143")   # becomes 'pa%24%24word%40123'
+# Encode username and password for MongoDB URI
+username = urllib.parse.quote_plus("sireesha")
+password = urllib.parse.quote_plus("@Kudnana143")
 
-# Option A: Hardcode the connection string (not recommended for production)
-#client = MongoClient("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority")
-
-# Option B: Use an environment variable (recommended for security)
-mongo_uri = os.environ.get("MONGO_URI")
+# Build connection string with encoded username and password
+mongo_uri = f"mongodb+srv://{username}:{password}@cluster0.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(mongo_uri)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# MongoDB setup (use Atlas for free cloud hosting)
-client = MongoClient("mongodb+srv://<your-username>:<your-password>@cluster0.mongodb.net/?retryWrites=true&w=majority")
 db = client['ecommerce']
 products = db['products']
 

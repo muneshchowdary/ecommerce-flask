@@ -3,6 +3,14 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
+from pymongo import MongoClient
+
+# Option A: Hardcode the connection string (not recommended for production)
+#client = MongoClient("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority")
+
+# Option B: Use an environment variable (recommended for security)
+mongo_uri = os.environ.get("MONGO_URI")
+client = MongoClient(mongo_uri)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'

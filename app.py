@@ -10,7 +10,7 @@ username = urllib.parse.quote_plus("sireesha")
 password = urllib.parse.quote_plus("@Kudnana143")
 
 # Build connection string with encoded username and password
-mongo_uri = f"mongodb+srv://{username}:{password}@cluster0.mongodb.net/?retryWrites=true&w=majority"
+mongo_uri = f"mongodb+srv://{username}:{password}@Cluster0.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(mongo_uri)
 
 app = Flask(__name__)

@@ -45,7 +45,7 @@ def add_product():
         if 'image' in request.files and request.files['image'].filename:
             image = request.files['image']
             filename = secure_filename(image.filename)
-	    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	    	image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             prod["image"] = filename
         products.insert_one(prod)
         return redirect(url_for('index'))

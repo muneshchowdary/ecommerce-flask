@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if product %}Edit{% else %}Add{% endif %} Product</title>
+</head>
+<body>
+    <h1>{% if product %}Edit{% else %}Add{% endif %} Product</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Name" value="{{ product['name'] if product else '' }}" required><br>
+        <input type="number" name="price" placeholder="Price" value="{{ product['price'] if product else '' }}" step="0.01" required><br>
+        <textarea name="description" placeholder="Description">{{ product['description'] if product else '' }}</textarea><br>
+        {% if product and product.get('image') %}
+            <img src="{{ url_for('uploaded_file', filename=product['image']) }}" width="100" /><br>
+        {% endif %}
+        <input type="file" name="image"><br>
+        <button type="submit">Save</button>
+    </form>
+    <a href="/">Back</a>
+</body>
+</html>

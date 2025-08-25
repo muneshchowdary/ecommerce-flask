@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ecommerce Products</title>
+</head>
+<body>
+    <h1>Products</h1>
+    <a href="/add">Add Product</a>
+    <ul>
+        {% for p in products %}
+        <li>
+            <strong>{{ p['name'] }}</strong> - ${{ p['price'] }}<br>
+            {{ p['description'] }}<br>
+            {% if p.get('image') %}
+                <img src="{{ url_for('uploaded_file', filename=p['image']) }}" width="100" />
+            {% endif %}
+            <br>
+            <a href="/edit/{{ p['_id'] }}">Edit</a> |
+            <a href="/delete/{{ p['_id'] }}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

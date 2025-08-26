@@ -5,28 +5,32 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 
-# Encode username and password for MongoDB URI
+# Encode username and password
 username = urllib.parse.quote_plus("sireesha")
-password = urllib.parse.quote_plus("@Kudnana143")
-mongo_uri = f"mongodb+srv://{username}:{password}@Cluster0.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(mongo_uri)
+password = urllib.parse.quote_plus("@Kundana143")
 
+# Replace Cluster0 with your actual cluster name (case sensitive!)
+mongo_uri = f"mongodb+srv://{username}:{password}@Cluster0.mongodb.net/?retryWrites=true&w=majority"
+
+client = MongoClient(mongo_uri)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-db = client['ecommerce']
-products = db['products']
+# Replace with your database and collection names
+db = client['sample_mflix']
+collection = db['movies']
 
 @app.route('/')
 def index():
-    prod_list = list(products.find())
-    return render_template('index.html', products=prod_list)
+    # Example: get all documents
+    docs = list(collection.find())
+    return str(docs)  # Just for demo; normally render a template
 
 @app.route('/edit/<id>', methods=['GET', 'POST'])
 def edit_product(id):
-    prod = products.find_one({"_id": ObjectId(id)})
+    prod = collection.find_one({"_id": ObjectId(id)})
     if request.method == 'POST':
         name = request.form['name']
         price = float(request.form['price'])
@@ -37,7 +41,7 @@ def edit_product(id):
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             update["image"] = filename
-        products.update_one({"_id": ObjectId(id)}, {"$set": update})
+        collection.update_one({"_id": ObjectId(id)}, {"$set": update})
         return redirect(url_for('index'))
     return render_template('edit_product.html', product=prod)
 
@@ -53,13 +57,13 @@ def add_product():
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             prod["image"] = filename
-        products.insert_one(prod)
+        collection.insert_one(prod)
         return redirect(url_for('index'))
     return render_template('edit_product.html', product=None)
 
 @app.route('/delete/<id>')
 def delete_product(id):
-    products.delete_one({"_id": ObjectId(id)})
+    collection.delete_one({"_id": ObjectId(id)})
     return redirect(url_for('index'))
 
 @app.route('/static/uploads/<filename>')

@@ -7,26 +7,25 @@ from werkzeug.utils import secure_filename
 
 # Encode username and password
 username = urllib.parse.quote_plus("sireesha")
-password = urllib.parse.quote_plus("@Kundana143")
+password = urllib.parse.quote_plus("fOEJBLnUuWJPIgEu")
 
-# Replace Cluster0 with your actual cluster name (case sensitive!)
-mongo_uri = f"mongodb+srv://{username}:{password}@Cluster0.mongodb.net/?retryWrites=true&w=majority"
-
+# MongoDB connection
+mongo_uri = f"mongodb+srv://{username}:{password}@cluster0.gclepan.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(mongo_uri)
 
+# Flask app setup
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Replace with your database and collection names
+# Database & Collection
 db = client['sample_mflix']
 collection = db['movies']
 
 @app.route('/')
 def index():
-    # Example: get all documents
     docs = list(collection.find())
-    return str(docs)  # Just for demo; normally render a template
+    return render_template('index.html', products=docs)
 
 @app.route('/edit/<id>', methods=['GET', 'POST'])
 def edit_product(id):
@@ -36,13 +35,16 @@ def edit_product(id):
         price = float(request.form['price'])
         desc = request.form['description']
         update = {"name": name, "price": price, "description": desc}
+
         if 'image' in request.files and request.files['image'].filename:
             image = request.files['image']
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             update["image"] = filename
+
         collection.update_one({"_id": ObjectId(id)}, {"$set": update})
         return redirect(url_for('index'))
+
     return render_template('edit_product.html', product=prod)
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -52,13 +54,16 @@ def add_product():
         price = float(request.form['price'])
         desc = request.form['description']
         prod = {"name": name, "price": price, "description": desc}
+
         if 'image' in request.files and request.files['image'].filename:
             image = request.files['image']
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             prod["image"] = filename
+
         collection.insert_one(prod)
         return redirect(url_for('index'))
+
     return render_template('edit_product.html', product=None)
 
 @app.route('/delete/<id>')

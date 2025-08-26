@@ -5,13 +5,14 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 
+python -m pip install "pymongo[srv]"
+
 # Encode username and password for MongoDB URI
 username = urllib.parse.quote_plus("sireesha")
 password = urllib.parse.quote_plus("@Kudnana143")
-
-# Build connection string with encoded username and password
-mongo_uri = f"mongodb+srv://{username}:{password}@cluster0.mongodb.net/?retryWrites=true&w=majority"
+mongo_uri = f"mongodb+srv://{username}:{password}@Cluster0.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(mongo_uri)
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'

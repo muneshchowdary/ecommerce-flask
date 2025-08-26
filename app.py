@@ -5,8 +5,6 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 
-python -m pip install "pymongo[srv]"
-
 # Encode username and password for MongoDB URI
 username = urllib.parse.quote_plus("sireesha")
 password = urllib.parse.quote_plus("@Kudnana143")
